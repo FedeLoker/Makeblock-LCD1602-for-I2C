@@ -1,0 +1,162 @@
+
+{	"extensionName": "LCD1602 for I2C",
+	"description": "Using LCD 1602 with I2C interface in mBlock. You should install the 'LiquidCrystal_I2C.h' library first (https://github.com/marcoschwartz/LiquidCrystal_I2C). Based on the excellent work of ElArtista50",
+	"version": "1.0",
+	"author": "FedeLoker (fedeloker@gmail.com)",
+	"homepage": "https://github.com/FedeLoker/Makeblock-LCD1602-for-I2C",
+	"sort":2,
+	"javascriptURL":"js/LCDI2C.js",
+  "firmware":"1.0",
+  "extensionPort":0,
+	"blockSpecs": [
+		[
+			"w",
+			"Set: LCD at %d.lcdaddr has %d.lines lines and %d.cols characters per line",
+			"LCDI2Cbegin",
+			"0x27",
+			2,
+			16,
+			{
+				"setup":"lcd_I2C_{0}.init();\nlcd_I2C_{0}.backlight();\n",
+				"inc":"#include <LiquidCrystal_I2C.h>\n",
+				"def":"LiquidCrystal_I2C lcd_I2C_{0}({0}, 16, 2);\n",
+				"work":"",
+				"loop":""
+			}
+		],
+		[
+			"w",
+			"LCD at %d.lcdaddr Line %d.line Col %d.col Show %s ",
+			"LCDI2CPrint",
+			"0x27",
+			1,
+			1,
+			"Hello World!",
+			{
+				"setup":"",
+				"inc":"#include <LiquidCrystal_I2C.h>\n",
+				"def":"LiquidCrystal_I2C lcd_I2C_{0}({0}, 16, 2);\n",
+				"work":"lcd_I2C_{0}.setCursor( ({2}) - 1, ({1}) - 1 );\nlcd_I2C_{0}.print( {3} );\n",
+				"loop":""
+			}
+		],
+		[
+			"w",
+			"Clear LCD at %d.lcdaddr and Line %d.line Col %d.col Show %s ",
+			"LCDI2CClearandPrint",
+			"0x27",
+			1,
+			1,
+			"Hello World!",
+			{
+				"setup":"",
+				"inc":"#include <LiquidCrystal_I2C.h>\n",
+				"def":"LiquidCrystal_I2C lcd_I2C_{0}({0}, 16, 2);\n",
+				"work":"lcd_I2C_{0}.clear();\nlcd_I2C_{0}.setCursor( ({2}) - 1, ({1}) - 1 );\nlcd_I2C_{0}.print( {3} );\n",
+				"loop":""
+			}
+		],
+		[
+			"w",
+			"Turn %d.switch the backlight of LCD at %d.lcdaddr",
+			"LCDI2CBacklight",
+			"ON",
+			"0x27",
+			{
+				"setup":"",
+				"inc":"#include <LiquidCrystal_I2C.h>\n",
+				"def":"LiquidCrystal_I2C lcd_I2C_{1}({1}, 16, 2);\n",
+				"work":"lcd_I2C_{1}.setBacklight( {0} );\n",
+				"loop":""
+			}
+		],
+		[
+			"w",
+			"Clear LCD at %d.lcdaddr",
+			"LCDI2CClear",
+			"0x27",
+			{
+				"setup":"",
+				"inc":"#include <LiquidCrystal_I2C.h>\n",
+				"def":"LiquidCrystal_I2C lcd_I2C_{0}({0}, 16, 2);\n",
+				"work":"lcd_I2C_{0}.clear();\n",
+				"loop":""
+			}
+		],
+		[
+			"w",
+			"LCD at %d.lcdaddr %d.indicator",
+			"LCDI2CIndicator",
+			"0x27",
+			"show cursor",
+			{
+				"setup":"",
+				"inc":"#include <LiquidCrystal_I2C.h>\n",
+				"def":"LiquidCrystal_I2C lcd_I2C_{0}({0}, 16, 2);\nvoid setLCDindicator(LiquidCrystal_I2C *pLCD, int indstate){\nif (indstate==1) pLCD->cursor();\nelse if (indstate==2) pLCD->noCursor();\nelse if (indstate==3) pLCD->blink();\nelse if (indstate==4) pLCD->noBlink();\n}",
+				"work":"setLCDindicator(&lcd_I2C_{0}, {1} );\n",
+				"loop":""
+			}
+		]
+	],
+	"menus": {
+		"switch":["ON","OFF"],
+		"indicator":["show cursor","hide cursor","show blink","hide blink"],
+		"lines":[2,4],
+		"cols":[16,20],
+		"line":[1,2,3,4],
+		"col":[1,2,4,8,12,16,20],
+		"lcdaddr":["0x27","0x30","0x38","0x20","0x3F"]
+	},
+	"values":{
+		"ON":1,
+		"OFF":0,
+		"show cursor":1,
+		"hide cursor":2,
+		"show blink":3,
+		"hide blink":4
+	},
+	"translators":{
+		"zh_CN":{
+			"ON":"开启",
+			"OFF":"关闭",
+			"show cursor":"显示下划线光标",
+			"hide cursor":"隐藏下划线光标",
+			"show blink":"显示闪烁光标",
+			"hide blink":"隐藏闪烁光标",
+			"Set: LCD at %d.lcdaddr has %d.lines lines and %d.cols characters per line":"设置:在地址 %d.lcdaddr 的液晶屏有 %d.lines 行，每行 %d.cols 字符",
+			"LCD at %d.lcdaddr Line %d.line Col %d.col Show %s ":"在地址 %d.lcdaddr 的液晶屏第 %d.line 行第 %d.col 个字符开始显示 %s",
+			"Clear LCD at %d.lcdaddr and Line %d.line Col %d.col Show %s ":"清除地址 %d.lcdaddr 的液晶屏并在第 %d.line 行第 %d.col 个字符位置显示 %s",
+			"Turn %d.switch the backlight of LCD at %d.lcdaddr":"%d.switch 地址 %d.lcdaddr 的液晶屏的背光",
+			"Clear LCD at %d.lcdaddr":"清除地址 %d.lcdaddr 的液晶屏",
+			"LCD at %d.lcdaddr %d.indicator":"在地址 %d.lcdaddr 的液晶屏 %d.indicator"
+		},
+		"zh_TW":{
+			"ON":"開啟",
+			"OFF":"關閉",
+			"show cursor":"顯示底線游標",
+			"hide cursor":"隱藏底線游標",
+			"show blink":"顯示閃爍游標",
+			"hide blink":"隱藏閃爍游標",
+			"Set: LCD at %d.lcdaddr has %d.lines lines and %d.cols characters per line":"設置:在位址 %d.lcdaddr 的液晶屏有 %d.lines 行，每行 %d.cols 字元",
+			"LCD at %d.lcdaddr Line %d.line Col %d.col Show %s ":"在位址 %d.lcdaddr 的液晶屏第 %d.line 行第 %d.col 個字元開始顯示 %s",
+			"Clear LCD at %d.lcdaddr and Line %d.line Col %d.col Show %s ":"清除位址 %d.lcdaddr 的液晶屏並在第 %d.line 行第 %d.col 個字元位置顯示 %s",
+			"Turn %d.switch the backlight of LCD at %d.lcdaddr":"%d.switch 位址 %d.lcdaddr 的液晶屏的背光",
+			"Clear LCD at %d.lcdaddr":"清除位址 %d.lcdaddr 的液晶屏",
+			"LCD at %d.lcdaddr %d.indicator":"在位址 %d.lcdaddr 的液晶屏 %d.indicator"
+		},
+		"es_ES":{
+			"ON":"Encender",
+			"OFF":"Apagar",
+			"show cursor":"Mostrar Cursor",
+			"hide cursor":"Ocultar Cursor",
+			"show blink":"Mostrar Parpadeo",
+			"hide blink":"Ocultar Parpadeo",
+			"Set: LCD at %d.lcdaddr has %d.lines lines and %d.cols characters per line":"LCD en %d.lcdaddr tiene %d.lines lineas y %d.cols caracteres por linea",
+			"LCD at %d.lcdaddr Line %d.line Col %d.col Show %s ":"LCD en %d.lcdaddr Linea %d.line Col %d.col Mostrar %s",
+			"Clear LCD at %d.lcdaddr and Line %d.line Col %d.col Show %s ":"Limpiar LCD en %d.lcdaddr y Linea %d.line Col %d.col Mostrar %s",
+			"Turn %d.switch the backlight of LCD at %d.lcdaddr":"%d.switch el backlight del LCD en %d.lcdaddr",
+			"Clear LCD at %d.lcdaddr":"Limpiar LCD en %d.lcdaddr�",
+			"LCD at %d.lcdaddr %d.indicator":"LCD en %d.lcdaddr %d.indicator"
+		}
+	}
+}
